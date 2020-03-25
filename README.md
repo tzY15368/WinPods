@@ -1,10 +1,10 @@
 # WinPods
  airpods battery viewer for Windows 10
-----
-## Requirements (-)
+ 
+## Requirements 
 - Supports Windows 10, version 16299 (Fall Creators Update) or greater
 
-## References (-)
+## References 
 - Inspiration from Android project:<https://github.com/adolfintel/OpenPods>
 - Using Python library "Bleak":<https://github.com/hbldh/bleak>
 
