@@ -5,6 +5,7 @@ def isFlipped(b):
     return True#str(int(int(''+b[10],16)+0x10,2))[3]=='0'
 async def run():
     devices = await discover()
+    result = {}
     for d in devices:
         if d.rssi >=-690 and 76 in d.metadata['manufacturer_data'] and len(d.metadata['manufacturer_data'][76].hex())==54:
             print('================')
@@ -21,10 +22,18 @@ async def run():
                 print('LEFT:'+b[12]+' RIGHT:'+b[13])
                 print('CASE:'+b[15])
                 print('inCharge:'+b[14])
+                result['RSSI'] = d.rssi
+                result['ADDR'] = d.address
+                result['MODEL'] = b[7]
+                result['LEFT'] = b[12]
+                result['RIGHT'] = b[13]
+                result['CASE'] = b[15]
+                result['CHARGE'] = b[14]
             except Exception as e:
                 #pass
                 print(e)
             print('-----------------')
-
+    return result
 loop = asyncio.get_event_loop()
-loop.run_until_complete(run())
+a = loop.run_until_complete(run())
+print(a)
