@@ -36,9 +36,16 @@ left_Image=tk.PhotoImage(file="./img/left.png")
 right_Image = tk.PhotoImage(file='./img/right.png')
 case_Image = tk.PhotoImage(file='./img/case.png')
 if info['STATUS']==1:
+    print('--------'+info['CASE'])
+    if info['CASE'] == 'f':
+        print('!!!!!!')
+        case = 'unknown'
+    else:
+        print('-@#$@34')
+        case = info['CASE']
     battery_left_image = tk.PhotoImage(file='./img/'+info['LEFT']+'.png')
     battery_right_image = tk.PhotoImage(file='./img/'+info['RIGHT']+'.png')
-    battery_case_image = tk.PhotoImage(file='./img/'+info['CASE']+'.png')
+    battery_case_image = tk.PhotoImage(file='./img/'+case+'.png')
 else:
     battery_left_image = tk.PhotoImage(file='./img/unknown.png')
     battery_right_image = tk.PhotoImage(file='./img/unknown.png')
@@ -49,6 +56,6 @@ canvas.create_image(240,15, anchor='ne', image=right_Image)
 canvas.create_image(360,15, anchor='ne', image=case_Image)
 
 canvas.create_image(13,135, anchor='nw', image=battery_left_image)
-canvas.create_image(225,135, anchor='ne', image=battery_left_image)
-canvas.create_image(347,135, anchor='ne', image=battery_left_image)
+canvas.create_image(225,135, anchor='ne', image=battery_right_image)
+canvas.create_image(347,135, anchor='ne', image=battery_case_image)
 window.mainloop()

@@ -24,11 +24,11 @@ async def run():
                 print('inCharge:'+b[14])
                 result['RSSI'] = d.rssi
                 result['ADDR'] = d.address
-                result['MODEL'] = int(b[7])
-                result['LEFT'] = int(b[12])
-                result['RIGHT'] = int(b[13])
-                result['CASE'] = int(b[15])
-                result['CHARGE'] = int(b[14])
+                result['MODEL'] = b[7]
+                result['LEFT'] = b[12]
+                result['RIGHT'] = b[13]
+                result['CASE'] = b[15]
+                result['CHARGE'] = b[14]
                 result['STATUS'] = 1
             except Exception as e:
                 #pass
