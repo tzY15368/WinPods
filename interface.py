@@ -99,9 +99,16 @@ right_Image = tk.PhotoImage(file='./img/right.png')
 case_Image = tk.PhotoImage(file='./img/case.png')
 '''
 if info['STATUS']==1:
+    print('--------'+info['CASE'])
+    if info['CASE'] == 'f':
+        print('!!!!!!')
+        case = 'unknown'
+    else:
+        print('-@#$@34')
+        case = info['CASE']
     battery_left_image = tk.PhotoImage(file='./img/'+info['LEFT']+'.png')
     battery_right_image = tk.PhotoImage(file='./img/'+info['RIGHT']+'.png')
-    battery_case_image = tk.PhotoImage(file='./img/'+info['CASE']+'.png')
+    battery_case_image = tk.PhotoImage(file='./img/'+case+'.png')
 else:
     battery_left_image = tk.PhotoImage(file='./img/unknown.png')
     battery_right_image = tk.PhotoImage(file='./img/unknown.png')
