@@ -35,7 +35,11 @@ async def run():
                 print(e)
             print('-----------------')
     return result
-if __name__ == "__main__":
+def fetch_status():
+    new_loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(new_loop)
     loop = asyncio.get_event_loop()
     a = loop.run_until_complete(run())
-    print(a)
+    return a
+if __name__ == "__main__":
+    print(fetch_status())

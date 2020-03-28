@@ -13,7 +13,7 @@ result['RSSI'] = d.rssi
                 result['CASE'] = b[15]
                 result['CHARGE'] = b[14]
 '''
-loop = asyncio.get_event_loop()
+#loop = asyncio.get_event_loop()
 #info = loop.run_until_complete(get_status.run())
 info = {'RSSI':0,'STATUS':0}
 print(info)
@@ -38,7 +38,10 @@ def validate_result(r):
     else:
         return False
 def upd_img():
-    result = test.do_test()##CHANGE HERE-----------------
+    #loop = asyncio.get_event_loop()
+    #result = loop.run_until_complete(get_status.run())
+    result = get_status.fetch_status()
+    #result = test.do_test()##CHANGE HERE-----------------
     print(result)
     if result['STATUS']==1 and validate_result(result):
         left_battery_dir = './img/'+str(result['LEFT'])+'.png'
@@ -73,49 +76,18 @@ window.title('WinPods')
 window.geometry('360x230')
 window.resizable(0,0)
 window.configure(background='white')
-'''
-v = tk.StringVar()
-w = tk.Label(window,textvariable=v)
-v.set('test123')
-w.pack()
-'''
-'''
-img = Image.open('./img/10.png')
-img = ImageTk.PhotoImage(img)
-w = tk.Label(window)
-w.config(image=img)
-w.image = img
-w.pack()
-'''
+
 
 canvas = tk.Canvas(window,width=360,height=155, bg='white')
 canvas.config(highlightthickness=0)
 canvas.pack()
-#在画布上创建文字
-#canvas.create_text(20,170,text=info['RSSI'],fill="blue",font=("Times",16))
-#在画布上创建图片，tkinter只能显示gif文
+
+
 left_Image=tk.PhotoImage(file="./img/left.png")
 right_Image = tk.PhotoImage(file='./img/right.png')
 case_Image = tk.PhotoImage(file='./img/case.png')
-'''
-if info['STATUS']==1:
-    print('--------'+info['CASE'])
-    if info['CASE'] == 'f':
-        print('!!!!!!')
-        case = 'unknown'
-    else:
-        print('-@#$@34')
-        case = info['CASE']
-    battery_left_image = tk.PhotoImage(file='./img/'+info['LEFT']+'.png')
-    battery_right_image = tk.PhotoImage(file='./img/'+info['RIGHT']+'.png')
-    battery_case_image = tk.PhotoImage(file='./img/'+case+'.png')
-else:
-    battery_left_image = tk.PhotoImage(file='./img/unknown.png')
-    battery_right_image = tk.PhotoImage(file='./img/unknown.png')
-    battery_case_image = tk.PhotoImage(file='./img/unknown.png')
-'''
 
-#以(10,70)为西北角显示图像
+
 canvas.create_image(0, 15, anchor='nw', image=left_Image)
 canvas.create_image(240,15, anchor='ne', image=right_Image)
 canvas.create_image(360,15, anchor='ne', image=case_Image)
