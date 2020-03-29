@@ -4,3 +4,4 @@
 .idea/$CACHE_FILE$
 .idea/$CACHE_FILE$
 *.xml
+*.pyc
