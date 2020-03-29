@@ -3,71 +3,57 @@ import asyncio
 import test
 import get_status
 import threading
+import time
 from PIL import Image,ImageTk
-'''
-result['RSSI'] = d.rssi
-                result['ADDR'] = d.address
-                result['MODEL'] = b[7]
-                result['LEFT'] = b[12]
-                result['RIGHT'] = b[13]
-                result['CASE'] = b[15]
-                result['CHARGE'] = b[14]
-'''
-#loop = asyncio.get_event_loop()
-#info = loop.run_until_complete(get_status.run())
-info = {'RSSI':0,'STATUS':0}
-print(info)
 
-#test.do_test()#{'RSSI':0}
-#info = {'RSSI':-55,'ADDR':'12:34:45:56','MODEL':'e','LEFT':3,'RIGHT':'f','CASE':'f','CHARGE':'b'}
-async def get_info():
-    result = await test.do_test()
-    print(result)
-    return result
-def get_test():
-    img = Image.open('./img/5.png')
-    img = ImageTk.PhotoImage(img)
-    test.do_test()
-    #v.set('888')
-    w.config(image=img)
-    w.image = img
-    return
+
 def validate_result(r):
     if r['LEFT']  and r['RIGHT'] and r['CASE'] in [1,2,3,4,5,6,7,8,9,10,0,'1','2','3','4','5','6','7','8','9','0','10','f']:
         return True
     else:
         return False
+
+
 def upd_img():
-    #loop = asyncio.get_event_loop()
-    #result = loop.run_until_complete(get_status.run())
-    result = get_status.fetch_status()
-    #result = test.do_test()##CHANGE HERE-----------------
-    print(result)
-    if result['STATUS']==1 and validate_result(result):
-        left_battery_dir = './img/'+str(result['LEFT'])+'.png'
-        right_battery_dir = './img/' + str(result['RIGHT']) + '.png'
-        case_battery_dir = './img/' + str(result['CASE']) + '.png'
-    else:
-        left_battery_dir = './img/f.png'
-        right_battery_dir = './img/f.png'
-        case_battery_dir = './img/f.png'
-    img_left = ImageTk.PhotoImage(Image.open(left_battery_dir))
-    img_right = ImageTk.PhotoImage(Image.open(right_battery_dir))
-    img_case = ImageTk.PhotoImage(Image.open(case_battery_dir))
+    while True:
+        #result = test.do_test()##CHANGE HERE-----------------
+        img_waiting = ImageTk.PhotoImage(Image.open('./img/q.png'))
+        battery_case_label.config(image=img_waiting)
+        battery_case_label.image = img_waiting
+        battery_left_label.config(image=img_waiting)
+        battery_left_label.image = img_waiting
+        battery_right_label.config(image=img_waiting)
+        battery_right_label.image = img_waiting
 
-    battery_left_label.config(image=img_left)
-    battery_left_label.image = img_left
+        result = get_status.fetch_status()
+        print(result)
+        if result['STATUS'] == 1 and validate_result(result):
+            left_battery_dir = './img/' + str(result['LEFT']) + '.png'
+            right_battery_dir = './img/' + str(result['RIGHT']) + '.png'
+            case_battery_dir = './img/' + str(result['CASE']) + '.png'
+        else:
+            left_battery_dir = './img/f.png'
+            right_battery_dir = './img/f.png'
+            case_battery_dir = './img/f.png'
+        img_left = ImageTk.PhotoImage(Image.open(left_battery_dir))
+        img_right = ImageTk.PhotoImage(Image.open(right_battery_dir))
+        img_case = ImageTk.PhotoImage(Image.open(case_battery_dir))
 
-    battery_right_label.config(image=img_right)
-    battery_right_label.image = img_right
+        battery_left_label.config(image=img_left)
+        battery_left_label.image = img_left
 
-    battery_case_label.config(image=img_case)
-    battery_case_label.image = img_case
-    return
+        battery_right_label.config(image=img_right)
+        battery_right_label.image = img_right
+
+        battery_case_label.config(image=img_case)
+        battery_case_label.image = img_case
+        time.sleep(55)
+
+
 def upd():
     t = threading.Thread(target=upd_img)
+    t.daemon = True
     t.start()
-
 
 
 window = tk.Tk()
