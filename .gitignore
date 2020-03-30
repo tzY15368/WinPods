@@ -12,3 +12,8 @@
 main.spec
 __pycache__/get_status.cpython-37.pyc
 *.pyc
+.idea/$CACHE_FILE$
+.idea/$CACHE_FILE$
+__pycache__/get_status.cpython-37.pyc
+__pycache__/interface.cpython-37.pyc
+__pycache__/test.cpython-37.pyc

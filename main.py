@@ -9,8 +9,8 @@ import get_status
 from PIL import ImageTk,Image
 Main = None
 
-def validate_result(r):
-    if r['LEFT']  and r['RIGHT'] and r['CASE'] in [1,2,3,4,5,6,7,8,9,10,0,'1','2','3','4','5','6','7','8','9','0','10','f']:
+def validate_result(r):#r=='a' seems to indicate that airpods are in case with case open?
+    if r['LEFT']  and r['RIGHT'] and r['CASE'] in [1,2,3,4,5,6,7,8,9,10,0,'1','2','3','4','5','6','7','8','9','0','10','f','a']:
         return True
     else:
         return False

@@ -1,5 +1,4 @@
 import asyncio
-impo
 from bleak import discover
 from var_dump import var_dump
 def isFlipped(b):
@@ -8,7 +7,7 @@ async def run():
     devices = await discover()
     result = {'STATUS':0}
     for d in devices:
-        if d.rssi >=-690 and 76 in d.metadata['manufacturer_data'] and len(d.metadata['manufacturer_data'][76].hex())==54:
+        if True or d.rssi >=-690 and 76 in d.metadata['manufacturer_data'] and len(d.metadata['manufacturer_data'][76].hex())==54:
             print('================')
             #print(var_dump(d))
             print(d.rssi)
@@ -33,7 +32,7 @@ async def run():
                     result['CHARGE'] = b[14]
                     result['STATUS'] = 1
                 else:
-                    if d.rssi < result['RSSI']:
+                    if d.rssi > result['RSSI']:
                         result['RSSI'] = d.rssi
                         result['ADDR'] = d.address
                         result['MODEL'] = b[7]
@@ -56,5 +55,5 @@ def fetch_status():
 def get_sys_bt():
     return
 if __name__ == "__main__":
-    #print(fetch_status())
-    get_sys_bt()
+    print(fetch_status())
+    #get_sys_bt()
