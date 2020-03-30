@@ -3,7 +3,7 @@ import win32api
 import win32con
 import win32gui_struct
 import win32gui
-import time
+from time import sleep
 import threading
 import get_status
 from PIL import ImageTk,Image
@@ -102,6 +102,7 @@ class SysTrayIcon(object):
         if lparam == win32con.WM_LBUTTONDBLCLK:  # 双击左键
             pass  # s.execute_menu_option(s.default_menu_index + s.FIRST_ID)
         elif lparam == win32con.WM_RBUTTONUP:  # 单击右键
+            #if Main: Main.window.deiconify()
             s.show_menu()
         elif lparam == win32con.WM_LBUTTONUP:  # 单击左键
             nid = (s.hwnd, 0)
@@ -298,7 +299,7 @@ class _Main:
 
             self.battery_case_label.config(image=img_case)
             self.battery_case_label.image = img_case
-            time.sleep(55)
+            sleep(55)
 
     def upd(self):
         t = threading.Thread(target=self.upd_img)

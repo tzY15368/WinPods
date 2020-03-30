@@ -6,3 +6,9 @@
 *.xml
 *.pyc
 *.pyc
+/dist/
+/build/
+/__pycache__/
+main.spec
+__pycache__/get_status.cpython-37.pyc
+*.pyc
