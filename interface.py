@@ -55,12 +55,13 @@ def upd():
     t.daemon = True
     t.start()
 def check_bt():
-    import eventlet  # 导入eventlet这个模块
-    eventlet.monkey_patch()  # 必须加这条代码
-    with eventlet.Timeout(0.5, False):  # 设置超时时间为2秒
+    import eventlet
+    import get_status
+    eventlet.monkey_patch()
+    with eventlet.Timeout(0.05, False):
+        get_status.fetch_status()#BT ON
         return True
-        print('没有跳过这条输出')
-    print('跳过了输出')
+    return False#BT OFF
 window = tk.Tk()
 window.iconbitmap(default=r'./img/Airpods.ico')
 window.title('WinPods')
@@ -98,9 +99,9 @@ battery_left_label.pack(side='left')
 battery_right_label.pack(side='left',padx=15)
 battery_case_label.pack(side='left')
 
-upd()
-bt_status = check_bt()
-if bt_status:
+
+if check_bt():
+    upd()
     window.mainloop()
 else:
     print('no bt')

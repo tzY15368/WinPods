@@ -14,22 +14,11 @@ t = a.start()
 var_dump(t)
 '''
 def check_bt():
-    import eventlet  # 导入eventlet这个模块
+    import eventlet
     import get_status
-    t1 = time.time()
-    print(t1)
-    eventlet.monkey_patch()  # 必须加这条代码
-    with eventlet.Timeout(0.1, False):  # 设置超时时间为2秒
-        #get_status.fetch_status()
-        print('BT off')
-        t2 = time.time()
-        print(t2)
-        print('----' + str(t2 - t1))
-        return False
-        #print('没有跳过这条输出')
-    print('bt on')
-    t2 = time.time()
-    print(t2)
-    print('----'+str(t2-t1))
-    return True
-check_bt()
+    eventlet.monkey_patch()
+    with eventlet.Timeout(0.05, False):
+        get_status.fetch_status()#BT ON
+        return True
+    return False#BT OFF
+print(check_bt())

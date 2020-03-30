@@ -65,6 +65,13 @@ def get_sys_bt():
     for i in nearby_devices:
         print(i)
     return
+def check_bt():
+    import eventlet
+    eventlet.monkey_patch()
+    with eventlet.Timeout(0.05, False):
+        fetch_status()
+        return True#BT ON
+    return False#BT OFF
 if __name__ == "__main__":
     #print(fetch_status())
     get_sys_bt()
