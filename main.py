@@ -4,7 +4,7 @@ import win32con
 import win32gui_struct
 import win32gui
 from time import sleep
-import threading
+from threading import Thread
 import get_status
 from PIL import ImageTk,Image
 Main = None
@@ -217,54 +217,78 @@ class SysTrayIcon(object):
 class _Main:
     def main(s):
         import tkinter as tk
-        #s.root = tk.Tk()
-        s.window = tk.Tk()
-        s.window.iconbitmap(default=r'./img/Airpods.ico')
-        s.window.title('WinPods')
-        s.window.geometry('360x230')
-        s.window.resizable(0, 0)
-        s.window.configure(background='white')
+        if get_status.check_bt():
+            print('went here')
+            s.window = tk.Tk()
+            s.window.iconbitmap(default=r'./img/Airpods.ico')
+            s.window.title('WinPods')
+            s.window.geometry('360x230')
+            s.window.resizable(0, 0)
+            s.window.configure(background='white')
 
-        s.canvas = tk.Canvas(s.window, width=360, height=155, bg='white')
-        s.canvas.config(highlightthickness=0)
-        s.canvas.pack()
+            s.canvas = tk.Canvas(s.window, width=360, height=155, bg='white')
+            s.canvas.config(highlightthickness=0)
+            s.canvas.pack()
 
-        s.left_Image = tk.PhotoImage(file="./img/left.png")
-        s.right_Image = tk.PhotoImage(file='./img/right.png')
-        s.case_Image = tk.PhotoImage(file='./img/case.png')
+            s.left_Image = tk.PhotoImage(file="./img/left.png")
+            s.right_Image = tk.PhotoImage(file='./img/right.png')
+            s.case_Image = tk.PhotoImage(file='./img/case.png')
 
-        s.canvas.create_image(0, 15, anchor='nw', image=s.left_Image)
-        s.canvas.create_image(240, 15, anchor='ne', image=s.right_Image)
-        s.canvas.create_image(360, 15, anchor='ne', image=s.case_Image)
+            s.canvas.create_image(0, 15, anchor='nw', image=s.left_Image)
+            s.canvas.create_image(240, 15, anchor='ne', image=s.right_Image)
+            s.canvas.create_image(360, 15, anchor='ne', image=s.case_Image)
 
-        s.q_img = ImageTk.PhotoImage(Image.open('./img/q.png'))
-        s.battery_left_label = tk.Label(s.window)
-        s.battery_left_label.config(image=s.q_img, background='white')
-        s.battery_left_label.image = s.q_img
-        s.battery_case_label = tk.Label(s.window)
-        s.battery_case_label.config(image=s.q_img, background='white')
-        s.battery_case_label.image = s.q_img
-        s.battery_right_label = tk.Label(s.window)
-        s.battery_right_label.config(image=s.q_img, background='white')
-        s.battery_right_label.image = s.q_img
-        s.battery_left_label.pack(side='left')
-        s.battery_right_label.pack(side='left', padx=15)
-        s.battery_case_label.pack(side='left')
+            s.q_img = ImageTk.PhotoImage(Image.open('./img/q.png'))
+            s.battery_left_label = tk.Label(s.window)
+            s.battery_left_label.config(image=s.q_img, background='white')
+            s.battery_left_label.image = s.q_img
+            s.battery_case_label = tk.Label(s.window)
+            s.battery_case_label.config(image=s.q_img, background='white')
+            s.battery_case_label.image = s.q_img
+            s.battery_right_label = tk.Label(s.window)
+            s.battery_right_label.config(image=s.q_img, background='white')
+            s.battery_right_label.image = s.q_img
+            s.battery_left_label.pack(side='left')
+            s.battery_right_label.pack(side='left', padx=15)
+            s.battery_case_label.pack(side='left')
 
+            icons = './img/Airpods.ico'
+            hover_text = "WinPods"  # 悬浮于图标上方时的提示
+            menu_options = ()
+            # menu_options = (('更改 图标', None, s.switch_icon),
+            #               ('二级 菜单', None, (('更改 图标', None, s.switch_icon),)))
+            s.sysTrayIcon = SysTrayIcon(icons, hover_text, menu_options, on_quit=s.exit, default_menu_index=1)
 
-        icons = './img/Airpods.ico'
-        hover_text = "WinPods"  # 悬浮于图标上方时的提示
-        menu_options = ()
-        #menu_options = (('更改 图标', None, s.switch_icon),
-         #               ('二级 菜单', None, (('更改 图标', None, s.switch_icon),)))
-        s.sysTrayIcon = SysTrayIcon(icons, hover_text, menu_options, on_quit=s.exit, default_menu_index=1)
+            s.window.bind("<Unmap>", lambda event: s.Unmap() if s.window.state() == 'iconic' else False)
+            s.window.protocol('WM_DELETE_WINDOW', s.exit)
+            s.window.resizable(0, 0)
+            s.upd()
+            s.window.mainloop()
+        else:
+            print('2222')
+            s.ErrorWindow = tk.Tk()
+            s.ErrorWindow.resizable(0,0)
+            s.ErrorWindow.iconbitmap(default=r'./img/Airpods.ico')
+            s.ErrorWindow.title('Error')
+            s.ErrorWindow.geometry('228x128')
+            s.ErrorWindow.configure(background='white')
 
-        s.window.bind("<Unmap>", lambda event: s.Unmap() if s.window.state() == 'iconic' else False)
-        s.window.protocol('WM_DELETE_WINDOW', s.exit)
-        s.window.resizable(0, 0)
-        s.upd()
-        s.window.mainloop()
-        #s.root.mainloop()
+            s.btmissing_img = ImageTk.PhotoImage(Image.open('./img/btmissing.png'))
+            s.btmissing_label = tk.Label(s.ErrorWindow)
+            s.btmissing_label.config(image=s.btmissing_img, background='white')
+            s.btmissing_label.image = s.btmissing_img
+            def opensettings():
+                import os
+                os.system('explorer /e,/root,ms-settings:bluetooth')
+            s.InfoLabel = tk.Label(s.ErrorWindow, text="""系统蓝牙未启用""",background='white',anchor="nw", justify="left")
+            s.button = tk.Button(s.ErrorWindow,text="前往设置",command=opensettings)
+
+            s.btmissing_label.pack(side='left')
+            s.button.pack(side='bottom', pady=10)
+            s.InfoLabel.pack(side='bottom')
+
+            s.ErrorWindow.mainloop()
+
 
     def upd_img(self):
         while True:
@@ -276,7 +300,7 @@ class _Main:
             self.battery_left_label.image = img_waiting
             self.battery_right_label.config(image=img_waiting)
             self.battery_right_label.image = img_waiting
-
+            print('----!')
             result = get_status.fetch_status()
             print(result)
             if result['STATUS'] == 1 and validate_result(result):
@@ -302,6 +326,7 @@ class _Main:
             sleep(55)
 
     def upd(self):
+        print('starting upd:')
         t = threading.Thread(target=self.upd_img)
         t.daemon = True
         t.start()

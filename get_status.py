@@ -1,6 +1,7 @@
-import asyncio
+import asyncio,threading
 from bleak import discover
-from var_dump import var_dump
+from bluetooth import discover_devices
+from time import time,sleep
 def isFlipped(b):
     return True#str(int(int(''+b[10],16)+0x10,2))[3]=='0'
 async def run():
@@ -17,6 +18,7 @@ async def run():
                 print(b)
                 # print(len(b))
                 print(isFlipped(b))
+
                 if result['STATUS']!=1:
                     print('ADDR:'+d.address)
                     print('MODEL:'+b[7])
@@ -52,8 +54,48 @@ def fetch_status():
     loop = asyncio.get_event_loop()
     a = loop.run_until_complete(run())
     return a
-def get_sys_bt():
-    return
+
+
+class bt(object):
+    def __init__(self):
+        self.btStatus = True
+
+    def set_status(self, val):
+        self.btStatus = val
+    def get_status(self):
+        while True:
+            print(self.btStatus)
+            sleep(0.8)
+    def get_sys_bt(self):
+        print("performing inquiry...")
+        time1 = time()
+        nearby_devices = discover_devices(lookup_names=True)
+        print("found %d devices" % len(nearby_devices))
+        time2 = time()
+        print('time taken:' + str(time2 - time1))
+        for name, addr in nearby_devices:
+            print(" %s - %s" % (addr, name))
+        re = len(nearby_devices)
+        print('re:' + str(re))
+        if re == 0:
+            self.set_status(False)
+        self.set_status(False)
+        return
+def check_bt():
+    mybt = bt()
+    print(mybt.btStatus)
+    t = threading.Thread(target=mybt.get_sys_bt)
+    t.daemon = True
+    t.start()
+    sleep(0.1)
+    print('returning status:',mybt.btStatus)
+    return mybt.btStatus
+
+
 if __name__ == "__main__":
-    print(fetch_status())
+    #print(fetch_status())
     #get_sys_bt()
+    t1 = time()
+    print(check_bt())
+    t2 = time()
+    print('taken:',t2-t1)
