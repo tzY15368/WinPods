@@ -300,7 +300,7 @@ class _Main:
             self.battery_left_label.image = img_waiting
             self.battery_right_label.config(image=img_waiting)
             self.battery_right_label.image = img_waiting
-
+            print('----!')
             result = get_status.fetch_status()
             print(result)
             if result['STATUS'] == 1 and validate_result(result):
@@ -326,6 +326,7 @@ class _Main:
             sleep(55)
 
     def upd(self):
+        print('starting upd:')
         t = threading.Thread(target=self.upd_img)
         t.daemon = True
         t.start()

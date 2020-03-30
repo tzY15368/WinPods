@@ -21,4 +21,8 @@ def check_bt():
         get_status.fetch_status()#BT ON
         return True
     return False#BT OFF
-print(check_bt())
+
+#print(check_bt())
+import get_status
+r = get_status.fetch_status()
+print(r)
