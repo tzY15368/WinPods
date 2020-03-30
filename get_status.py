@@ -1,6 +1,7 @@
 import asyncio
 from bleak import discover
-from var_dump import var_dump
+from bluetooth import discover_devices
+from time import time
 def isFlipped(b):
     return True#str(int(int(''+b[10],16)+0x10,2))[3]=='0'
 async def run():
@@ -53,7 +54,17 @@ def fetch_status():
     a = loop.run_until_complete(run())
     return a
 def get_sys_bt():
+    print("performing inquiry...")
+    time1 = time()
+    nearby_devices = discover_devices(lookup_names=True)
+    print("found %d devices" % len(nearby_devices))
+    time2 = time()
+    print('time taken:' + str(time2 - time1))
+    for name, addr in nearby_devices:
+        print(" %s - %s" % (addr, name))
+    for i in nearby_devices:
+        print(i)
     return
 if __name__ == "__main__":
-    print(fetch_status())
-    #get_sys_bt()
+    #print(fetch_status())
+    get_sys_bt()

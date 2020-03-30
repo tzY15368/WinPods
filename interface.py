@@ -54,8 +54,13 @@ def upd():
     t = threading.Thread(target=upd_img)
     t.daemon = True
     t.start()
-
-
+def check_bt():
+    import eventlet  # 导入eventlet这个模块
+    eventlet.monkey_patch()  # 必须加这条代码
+    with eventlet.Timeout(0.5, False):  # 设置超时时间为2秒
+        return True
+        print('没有跳过这条输出')
+    print('跳过了输出')
 window = tk.Tk()
 window.iconbitmap(default=r'./img/Airpods.ico')
 window.title('WinPods')
@@ -94,4 +99,8 @@ battery_right_label.pack(side='left',padx=15)
 battery_case_label.pack(side='left')
 
 upd()
-window.mainloop()
+bt_status = check_bt()
+if bt_status:
+    window.mainloop()
+else:
+    print('no bt')
