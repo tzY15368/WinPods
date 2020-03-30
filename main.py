@@ -4,7 +4,7 @@ import win32con
 import win32gui_struct
 import win32gui
 from time import sleep
-import threading
+from threading import Thread
 import get_status
 from PIL import ImageTk,Image
 Main = None
