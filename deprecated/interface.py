@@ -1,6 +1,4 @@
 import tkinter as tk
-import asyncio
-import test
 import get_status
 import threading
 import time
@@ -17,7 +15,7 @@ def validate_result(r):
 def upd_img():
     while True:
         #result = test.do_test()##CHANGE HERE-----------------
-        img_waiting = ImageTk.PhotoImage(Image.open('./img/q.png'))
+        img_waiting = ImageTk.PhotoImage(Image.open('../img/q.png'))
         battery_case_label.config(image=img_waiting)
         battery_case_label.image = img_waiting
         battery_left_label.config(image=img_waiting)
@@ -32,9 +30,9 @@ def upd_img():
             right_battery_dir = './img/' + str(result['RIGHT']) + '.png'
             case_battery_dir = './img/' + str(result['CASE']) + '.png'
         else:
-            left_battery_dir = './img/f.png'
-            right_battery_dir = './img/f.png'
-            case_battery_dir = './img/f.png'
+            left_battery_dir = '../img/f.png'
+            right_battery_dir = '../img/f.png'
+            case_battery_dir = '../img/f.png'
         img_left = ImageTk.PhotoImage(Image.open(left_battery_dir))
         img_right = ImageTk.PhotoImage(Image.open(right_battery_dir))
         img_case = ImageTk.PhotoImage(Image.open(case_battery_dir))
@@ -75,9 +73,9 @@ canvas.config(highlightthickness=0)
 canvas.pack()
 
 
-left_Image=tk.PhotoImage(file="./img/left.png")
-right_Image = tk.PhotoImage(file='./img/right.png')
-case_Image = tk.PhotoImage(file='./img/case.png')
+left_Image=tk.PhotoImage(file="../img/left.png")
+right_Image = tk.PhotoImage(file='../img/right.png')
+case_Image = tk.PhotoImage(file='../img/case.png')
 
 
 canvas.create_image(0, 15, anchor='nw', image=left_Image)
@@ -85,7 +83,7 @@ canvas.create_image(240,15, anchor='ne', image=right_Image)
 canvas.create_image(360,15, anchor='ne', image=case_Image)
 
 
-q_img = ImageTk.PhotoImage(Image.open('./img/q.png'))
+q_img = ImageTk.PhotoImage(Image.open('../img/q.png'))
 battery_left_label = tk.Label(window)
 battery_left_label.config(image=q_img,background='white')
 battery_left_label.image = q_img
