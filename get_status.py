@@ -79,7 +79,7 @@ class bt(object):
         print('re:' + str(re))
         if re == 0:
             self.set_status(False)
-        self.set_status(False)
+        #self.set_status(False)
         return
 def check_bt():
     mybt = bt()
@@ -87,7 +87,7 @@ def check_bt():
     t = threading.Thread(target=mybt.get_sys_bt)
     t.daemon = True
     t.start()
-    sleep(0.1)
+    sleep(0.02)
     print('returning status:',mybt.btStatus)
     return mybt.btStatus
 
