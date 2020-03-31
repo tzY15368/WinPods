@@ -1,4 +1,5 @@
-import time,threading
+import time,threading,sys,os
+from PIL import Image
 from var_dump import var_dump
 def do_test():
     time.sleep(2)
@@ -13,16 +14,22 @@ a = threading.Thread(target=prints)
 t = a.start()
 var_dump(t)
 '''
-def check_bt():
-    import eventlet
-    import get_status
-    eventlet.monkey_patch()
-    with eventlet.Timeout(0.05, False):
-        get_status.fetch_status()#BT ON
-        return True
-    return False#BT OFF
-
-#print(check_bt())
-import get_status
-r = get_status.fetch_status()
-print(r)
+def resource_path(relative_path):
+    if getattr(sys, 'frozen', False): #是否Bundle Resource
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+'''
+imgpath = './img/1.png'
+img = Image.open(resource_path(imgpath))
+filename = resource_path(os.path.join("res","a.txt"))
+print(filename)
+img.show()'''
+import subprocess
+#p = subprocess.run('explorer /e,/root,ms-settings:bluetooth',
+#                     shell=True)
+                     #stdin=subprocess.PIPE,
+                     #stdout=subprocess.PIPE,
+                     #stderr=subprocess.PIPE)
+a = os.popen('explorer /e,/root,ms-settings:bluetooth')
