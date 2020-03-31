@@ -1,14 +1,21 @@
-import os
+import os,sys
 import win32api
 import win32con
 import win32gui_struct
 import win32gui
-from time import sleep
-from threading import Thread
+from time import sleep,time
+import threading
 import get_status
 from PIL import ImageTk,Image
+import tkinter as tk
+from subprocess import Popen,PIPE
 Main = None
-
+def resource_path(relative_path):
+    if getattr(sys, 'frozen', False): #是否Bundle Resource
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 def validate_result(r):#r=='a' seems to indicate that airpods are in case with case open?
     if r['LEFT']  and r['RIGHT'] and r['CASE'] in [1,2,3,4,5,6,7,8,9,10,0,'1','2','3','4','5','6','7','8','9','0','10','f','a']:
         return True
@@ -216,11 +223,10 @@ class SysTrayIcon(object):
 
 class _Main:
     def main(s):
-        import tkinter as tk
         if get_status.check_bt():
-            print('went here')
+            print('bt on')
             s.window = tk.Tk()
-            s.window.iconbitmap(default=r'./img/Airpods.ico')
+            s.window.iconbitmap(default=resource_path('./img/Airpods.ico'))
             s.window.title('WinPods')
             s.window.geometry('360x230')
             s.window.resizable(0, 0)
@@ -230,15 +236,15 @@ class _Main:
             s.canvas.config(highlightthickness=0)
             s.canvas.pack()
 
-            s.left_Image = tk.PhotoImage(file="./img/left.png")
-            s.right_Image = tk.PhotoImage(file='./img/right.png')
-            s.case_Image = tk.PhotoImage(file='./img/case.png')
+            s.left_Image = tk.PhotoImage(file=resource_path("./img/left.png"))
+            s.right_Image = tk.PhotoImage(file=resource_path('./img/right.png'))
+            s.case_Image = tk.PhotoImage(file=resource_path('./img/case.png'))
 
             s.canvas.create_image(0, 15, anchor='nw', image=s.left_Image)
             s.canvas.create_image(240, 15, anchor='ne', image=s.right_Image)
             s.canvas.create_image(360, 15, anchor='ne', image=s.case_Image)
 
-            s.q_img = ImageTk.PhotoImage(Image.open('./img/q.png'))
+            s.q_img = ImageTk.PhotoImage(Image.open(resource_path('./img/q.png')))
             s.battery_left_label = tk.Label(s.window)
             s.battery_left_label.config(image=s.q_img, background='white')
             s.battery_left_label.image = s.q_img
@@ -252,7 +258,7 @@ class _Main:
             s.battery_right_label.pack(side='left', padx=15)
             s.battery_case_label.pack(side='left')
 
-            icons = './img/Airpods.ico'
+            icons = resource_path('./img/Airpods.ico')
             hover_text = "WinPods"  # 悬浮于图标上方时的提示
             menu_options = ()
             # menu_options = (('更改 图标', None, s.switch_icon),
@@ -265,20 +271,24 @@ class _Main:
             s.upd()
             s.window.mainloop()
         else:
-            print('2222')
+            print('bt off')
             s.ErrorWindow = tk.Tk()
             s.ErrorWindow.resizable(0,0)
-            s.ErrorWindow.iconbitmap(default=r'./img/Airpods.ico')
+            s.ErrorWindow.iconbitmap(default=resource_path('./img/Airpods.ico'))
             s.ErrorWindow.title('Error')
             s.ErrorWindow.geometry('228x128')
             s.ErrorWindow.configure(background='white')
 
-            s.btmissing_img = ImageTk.PhotoImage(Image.open('./img/btmissing.png'))
+            s.btmissing_img = ImageTk.PhotoImage(Image.open(resource_path('./img/btmissing.png')))
             s.btmissing_label = tk.Label(s.ErrorWindow)
             s.btmissing_label.config(image=s.btmissing_img, background='white')
             s.btmissing_label.image = s.btmissing_img
             def opensettings():
-                import os
+                Popen('explorer /e,/root,ms-settings:bluetooth',
+                                                    shell=True,
+                                stdin=PIPE,
+                                stdout=PIPE,
+                                stderr=PIPE)
                 os.system('explorer /e,/root,ms-settings:bluetooth')
             s.InfoLabel = tk.Label(s.ErrorWindow, text="""系统蓝牙未启用""",background='white',anchor="nw", justify="left")
             s.button = tk.Button(s.ErrorWindow,text="前往设置",command=opensettings)
@@ -292,25 +302,23 @@ class _Main:
 
     def upd_img(self):
         while True:
-            # result = test.do_test()##CHANGE HERE-----------------
-            img_waiting = ImageTk.PhotoImage(Image.open('./img/q.png'))
+            img_waiting = ImageTk.PhotoImage(Image.open(resource_path('./img/q.png')))
             self.battery_case_label.config(image=img_waiting)
             self.battery_case_label.image = img_waiting
             self.battery_left_label.config(image=img_waiting)
             self.battery_left_label.image = img_waiting
             self.battery_right_label.config(image=img_waiting)
             self.battery_right_label.image = img_waiting
-            print('----!')
             result = get_status.fetch_status()
             print(result)
             if result['STATUS'] == 1 and validate_result(result):
-                left_battery_dir = './img/' + str(result['LEFT']) + '.png'
-                right_battery_dir = './img/' + str(result['RIGHT']) + '.png'
-                case_battery_dir = './img/' + str(result['CASE']) + '.png'
+                left_battery_dir = resource_path('./img/' + str(result['LEFT']) + '.png')
+                right_battery_dir = resource_path('./img/' + str(result['RIGHT']) + '.png')
+                case_battery_dir = resource_path('./img/' + str(result['CASE']) + '.png')
             else:
-                left_battery_dir = './img/f.png'
-                right_battery_dir = './img/f.png'
-                case_battery_dir = './img/f.png'
+                left_battery_dir = resource_path('./img/f.png')
+                right_battery_dir = resource_path('./img/f.png')
+                case_battery_dir = resource_path('./img/f.png')
             img_left = ImageTk.PhotoImage(Image.open(left_battery_dir))
             img_right = ImageTk.PhotoImage(Image.open(right_battery_dir))
             img_case = ImageTk.PhotoImage(Image.open(case_battery_dir))
@@ -330,12 +338,12 @@ class _Main:
         t = threading.Thread(target=self.upd_img)
         t.daemon = True
         t.start()
-
+    '''
     def switch_icon(s, _sysTrayIcon, icons='D:\\2.ico'):
         _sysTrayIcon.icon = icons
         _sysTrayIcon.refresh_icon()
         # 点击右键菜单项目会传递SysTrayIcon自身给引用的函数，所以这里的_sysTrayIcon = s.sysTrayIcon
-
+    '''
     def Unmap(s):
         s.window.withdraw()
         s.sysTrayIcon.show_icon()
