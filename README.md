@@ -7,6 +7,9 @@
 ## References 
 - Inspiration from Android project:<https://github.com/adolfintel/OpenPods>
 - Using Python library "Bleak":<https://github.com/hbldh/bleak>
+## Todo
+- model display(gen1,gen2,pro)
+- charging status display
 ## Known Issues
 - huge packing size(exe)
 - slow startup time
