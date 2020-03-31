@@ -7,7 +7,9 @@
 ## References 
 - Inspiration from Android project:<https://github.com/adolfintel/OpenPods>
 - Using Python library "Bleak":<https://github.com/hbldh/bleak>
-
+## Known Issues
+- huge packing size(exe)
+- slow startup time
 ## Credits
 - Airpod Icon</a> by <a href="https://iconscout.com/contributors/vincent-le-moign">Vincent Le Moign</a> on <a href="https://iconscout.com">Iconscout
 ## About
