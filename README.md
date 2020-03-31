@@ -10,6 +10,9 @@
 ## Todo
 - model display(gen1,gen2,pro)
 - charging status display
+## Known bugs
+- 100% charged battery could not be properly displayed
+- looping logic to be fixed.
 ## Known Issues
 - huge packing size(exe)
 - slow startup time
