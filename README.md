@@ -2,11 +2,11 @@
  airpods battery viewer for Windows 10
 
 ## Requirements 
-- Windows 10, version 16299 (Fall Creators Update) or greater
+- Windows 10, version 16299 (Fall Creators Update) or higher
 - Bluetooth 4.0+ (tested and developed on Dell AC1560 and Intel AX200(Won't happen till May.))
 ## References 
 - Inspiration from Android project:<https://github.com/adolfintel/OpenPods>
-- Using Python library "Bleak":<https://github.com/hbldh/bleak>
+- Using Python library "Bleak":<https://github.com/hbldh/bleak> and "pybluez"
 ## Todo
 - model display(gen1,gen2,pro)
 - charging status display
