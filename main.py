@@ -344,9 +344,9 @@ class _Main:
             #Bit 0 (LSB) is the left pod; Bit 1 is the right pod; Bit 2 is the case.
 
             charging_status = str(str(bin(int(result['CHARGE'])))+'b')[2:-1]
-            charging_img_left = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-'+charging_status[-1])))
-            charging_img_right = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-' + charging_status[-2])))
-            charging_img_case = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-' + charging_status[-3])))
+            charging_img_left = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-'+charging_status[-1]+'.png')))
+            charging_img_right = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-' + charging_status[-2]+'.png')))
+            charging_img_case = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-' + charging_status[-3]+'.png')))
 
             self.charging_left_label.config(image=charging_img_left)
             self.charging_left_label.image = charging_img_left
