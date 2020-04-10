@@ -16,8 +16,8 @@ def resource_path(relative_path):
     else:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
-def validate_result(r):#r=='a' seems to indicate that airpods are in case with case open?
-    if r['LEFT']  and r['RIGHT'] and r['CASE'] in [1,2,3,4,5,6,7,8,9,10,0,'1','2','3','4','5','6','7','8','9','0','10','f','a']:
+def validate_result(r):
+    if r['LEFT'] and r['RIGHT'] and r['CASE'] in [1,2,3,4,5,6,7,8,9,0,'1','2','3','4','5','6','7','8','9','0','f','a']:
         return True
     else:
         return False
@@ -37,7 +37,7 @@ class SysTrayIcon(object):
         s.hover_text = hover_text
         s.on_quit = on_quit
 
-        menu_options = menu_options + (('退出', None, s.QUIT),)
+        menu_options = menu_options + (('Exit', None, s.QUIT),)
         s._next_action_id = s.FIRST_ID
         s.menu_actions_by_id = set()
         s.menu_options = s._add_ids_to_menu_options(list(menu_options))
@@ -226,7 +226,7 @@ class _Main:
         if get_status.check_bt():
             print('bt on')
             s.window = tk.Tk()
-            s.window.iconbitmap(default=resource_path('./img/Airpods.ico'))
+            s.window.iconbitmap(default=resource_path('./img/case-white.ico'))
             s.window.title('WinPods')
             s.window.geometry('360x230')
             s.window.resizable(0, 0)
@@ -241,24 +241,46 @@ class _Main:
             s.case_Image = tk.PhotoImage(file=resource_path('./img/case.png'))
 
             s.canvas.create_image(0, 15, anchor='nw', image=s.left_Image)
-            s.canvas.create_image(240, 15, anchor='ne', image=s.right_Image)
-            s.canvas.create_image(360, 15, anchor='ne', image=s.case_Image)
+            s.canvas.create_image(115, 15, anchor='nw', image=s.right_Image)
+            s.canvas.create_image(235, 15, anchor='nw', image=s.case_Image)
 
             s.q_img = ImageTk.PhotoImage(Image.open(resource_path('./img/q.png')))
+            s.charging_img = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-0.png')))
+            #################### LEFT
             s.battery_left_label = tk.Label(s.window)
             s.battery_left_label.config(image=s.q_img, background='white')
             s.battery_left_label.image = s.q_img
+
+            s.charging_left_label = tk.Label(s.window)
+            s.charging_left_label.config(image=s.charging_img, background='white')
+            s.charging_left_label.image = s.charging_img
+            ################# CASE
             s.battery_case_label = tk.Label(s.window)
             s.battery_case_label.config(image=s.q_img, background='white')
             s.battery_case_label.image = s.q_img
+
+            s.charging_case_label = tk.Label(s.window)
+            s.charging_case_label.config(image=s.charging_img, background='white')
+            s.charging_case_label.image = s.charging_img
+            ############### RIGHT
             s.battery_right_label = tk.Label(s.window)
             s.battery_right_label.config(image=s.q_img, background='white')
             s.battery_right_label.image = s.q_img
-            s.battery_left_label.pack(side='left')
-            s.battery_right_label.pack(side='left', padx=15)
-            s.battery_case_label.pack(side='left')
 
-            icons = resource_path('./img/Airpods.ico')
+            s.charging_right_label = tk.Label(s.window)
+            s.charging_right_label.config(image=s.charging_img, background='white')
+            s.charging_right_label.image = s.charging_img
+
+            s.battery_left_label.pack(side='left')
+            s.charging_left_label.pack(side='left',padx=5)
+
+            s.battery_right_label.pack(side='left')
+            s.charging_case_label.pack(side='left',padx=5)
+
+            s.battery_case_label.pack(side='left')
+            s.charging_right_label.pack(side='left')
+
+            icons = resource_path('./img/case-white.ico')
             hover_text = "WinPods"  # 悬浮于图标上方时的提示
             menu_options = ()
             # menu_options = (('更改 图标', None, s.switch_icon),
@@ -274,7 +296,7 @@ class _Main:
             print('bt off')
             s.ErrorWindow = tk.Tk()
             s.ErrorWindow.resizable(0,0)
-            s.ErrorWindow.iconbitmap(default=resource_path('./img/Airpods.ico'))
+            s.ErrorWindow.iconbitmap(default=resource_path('./img/case-white.ico'))
             s.ErrorWindow.title('Error')
             s.ErrorWindow.geometry('228x128')
             s.ErrorWindow.configure(background='white')
@@ -288,7 +310,7 @@ class _Main:
                                                     shell=True,
                                 stdin=PIPE,
                                 stdout=PIPE,
-                                stderr=PIPE)
+                                stderr=PIPE)#seems unable turn the cmd window off
                 os.system('explorer /e,/root,ms-settings:bluetooth')
             s.InfoLabel = tk.Label(s.ErrorWindow, text="""系统蓝牙未启用""",background='white',anchor="nw", justify="left")
             s.button = tk.Button(s.ErrorWindow,text="前往设置",command=opensettings)
@@ -302,13 +324,7 @@ class _Main:
 
     def upd_img(self):
         while True:
-            img_waiting = ImageTk.PhotoImage(Image.open(resource_path('./img/q.png')))
-            self.battery_case_label.config(image=img_waiting)
-            self.battery_case_label.image = img_waiting
-            self.battery_left_label.config(image=img_waiting)
-            self.battery_left_label.image = img_waiting
-            self.battery_right_label.config(image=img_waiting)
-            self.battery_right_label.image = img_waiting
+            self.window.title('WinPods refreshing')
             result = get_status.fetch_status()
             print(result)
             if result['STATUS'] == 1 and validate_result(result):
@@ -319,6 +335,28 @@ class _Main:
                 left_battery_dir = resource_path('./img/f.png')
                 right_battery_dir = resource_path('./img/f.png')
                 case_battery_dir = resource_path('./img/f.png')
+            if result['MODEL']=='1':
+                self.window.title('AirPods Gen 1')
+            if result['MODEL']=='2':
+                self.window.title('AirPods Gen 2')
+            if result['MODEL']=='e':
+                self.window.title('AirPods Pro')
+            #Bit 0 (LSB) is the left pod; Bit 1 is the right pod; Bit 2 is the case.
+
+            charging_status = str(str(bin(int(result['CHARGE'])))+'b')[2:-1]
+            charging_img_left = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-'+charging_status[-1])))
+            charging_img_right = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-' + charging_status[-2])))
+            charging_img_case = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-' + charging_status[-3])))
+
+            self.charging_left_label.config(image=charging_img_left)
+            self.charging_left_label.image = charging_img_left
+
+            self.charging_right_label.config(image=charging_img_right)
+            self.charging_right_label.image = charging_img_right
+
+            self.charging_case_label.config(image=charging_img_case)
+            self.charging_case_label.image = charging_img_case
+
             img_left = ImageTk.PhotoImage(Image.open(left_battery_dir))
             img_right = ImageTk.PhotoImage(Image.open(right_battery_dir))
             img_case = ImageTk.PhotoImage(Image.open(case_battery_dir))
@@ -331,7 +369,8 @@ class _Main:
 
             self.battery_case_label.config(image=img_case)
             self.battery_case_label.image = img_case
-            sleep(55)
+
+            sleep(5)
 
     def upd(self):
         print('starting upd:')
