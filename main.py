@@ -104,7 +104,8 @@ class SysTrayIcon(object):
         nid = (s.hwnd, 0)
         win32gui.Shell_NotifyIcon(win32gui.NIM_DELETE, nid)
         win32gui.PostQuitMessage(0)  # 退出托盘图标
-
+    def change_hover_text(self,text):
+        return
     def notify(s, hwnd, msg, wparam, lparam):
         if lparam == win32con.WM_LBUTTONDBLCLK:  # 双击左键
             pass  # s.execute_menu_option(s.default_menu_index + s.FIRST_ID)
@@ -331,32 +332,36 @@ class _Main:
                 left_battery_dir = resource_path('./img/' + str(result['LEFT']) + '.png')
                 right_battery_dir = resource_path('./img/' + str(result['RIGHT']) + '.png')
                 case_battery_dir = resource_path('./img/' + str(result['CASE']) + '.png')
+                if result['MODEL'] == '1':
+                    self.window.title('AirPods Gen 1')
+                if result['MODEL'] == '2':
+                    self.window.title('AirPods Gen 2')
+                if result['MODEL'] == 'e':
+                    self.window.title('AirPods Pro')
+                # Bit 0 (LSB) is the left pod; Bit 1 is the right pod; Bit 2 is the case.
+
+                charging_status = str(str(bin(int(result['CHARGE']))) + 'b')[2:-1]
+                charging_img_left = ImageTk.PhotoImage(
+                    Image.open(resource_path('./img/charging-' + charging_status[-1] + '.png')))
+                charging_img_right = ImageTk.PhotoImage(
+                    Image.open(resource_path('./img/charging-' + charging_status[-2] + '.png')))
+                charging_img_case = ImageTk.PhotoImage(
+                    Image.open(resource_path('./img/charging-' + charging_status[-3] + '.png')))
+
+                self.charging_left_label.config(image=charging_img_left)
+                self.charging_left_label.image = charging_img_left
+
+                self.charging_right_label.config(image=charging_img_right)
+                self.charging_right_label.image = charging_img_right
+
+                self.charging_case_label.config(image=charging_img_case)
+                self.charging_case_label.image = charging_img_case
+
             else:
                 left_battery_dir = resource_path('./img/f.png')
                 right_battery_dir = resource_path('./img/f.png')
                 case_battery_dir = resource_path('./img/f.png')
-            if result['MODEL']=='1':
-                self.window.title('AirPods Gen 1')
-            if result['MODEL']=='2':
-                self.window.title('AirPods Gen 2')
-            if result['MODEL']=='e':
-                self.window.title('AirPods Pro')
-            #Bit 0 (LSB) is the left pod; Bit 1 is the right pod; Bit 2 is the case.
-
-            charging_status = str(str(bin(int(result['CHARGE'])))+'b')[2:-1]
-            charging_img_left = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-'+charging_status[-1]+'.png')))
-            charging_img_right = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-' + charging_status[-2]+'.png')))
-            charging_img_case = ImageTk.PhotoImage(Image.open(resource_path('./img/charging-' + charging_status[-3]+'.png')))
-
-            self.charging_left_label.config(image=charging_img_left)
-            self.charging_left_label.image = charging_img_left
-
-            self.charging_right_label.config(image=charging_img_right)
-            self.charging_right_label.image = charging_img_right
-
-            self.charging_case_label.config(image=charging_img_case)
-            self.charging_case_label.image = charging_img_case
-
+            
             img_left = ImageTk.PhotoImage(Image.open(left_battery_dir))
             img_right = ImageTk.PhotoImage(Image.open(right_battery_dir))
             img_case = ImageTk.PhotoImage(Image.open(case_battery_dir))
