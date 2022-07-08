@@ -1,3 +1,6 @@
+# Current State of This Project
+Abandoned :( I got an iPhone and no longer need this tool to check on my airpods batteries.
+
 # WinPods
  Airpods battery viewer for Windows 10
  Tested and developed on Dell AC1560 and Intel AX200(music stutters occur occasionally, no current fix)), Windows 10, version 18362.720
